@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jMobilitySkeleton" default="default" basedir=".">
+	<property file="project.properties"/>
+	<target name="default" depends="compile, jar"/>
+	
+	<path id="classpath">
+			<fileset dir="${basedir}" includes="${lib}/**/*.jar" />
+	</path>
+
+	<pathconvert property="class-path" pathsep=" " dirsep="\">
+	  <path refid="classpath"></path>
+	  <map from="${basedir}" to=""/>		
+	</pathconvert>
+
+	
+	<target name="compile" depends="clean">
+		<mkdir dir="${build.dir}"/>
+		<javac srcdir="${src}" destdir="${build.dir}" classpathref="classpath"/>
+	</target>
+	
+	<target name="jar" depends="build:tempdir">
+		<jar destfile="${jar}" basedir="tempJar" manifest="MANIFEST.MF">
+		</jar>
+		<delete dir="tempJar"/>
+	</target>
+
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+	</target>
+	
+	<target name="build:tempdir">
+		<mkdir dir="tempJar"/>
+		<mkdir dir="tempJar/${lib}"/>
+		<copydir dest="tempJar/${lib}" src="${lib}"/>
+		<copydir dest="tempJar" src="${build.dir}"/>
+		<copy todir="tempJar"><fileset dir="." includes="*.txt"/></copy>
+	</target>
+</project>
